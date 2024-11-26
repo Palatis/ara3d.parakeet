@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Parakeet.Grammars", "Parake
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Parakeet.Tests", "Parakeet.Tests\Ara3D.Parakeet.Tests.csproj", "{FD574D56-9EA3-4AAA-92C9-F270D12B75C8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parakeet.Cst", "Parakeet.Cst\Ara3D.Parakeet.Cst.csproj", "{DA4E01AC-CD56-4467-9F7C-D912A79F8BDD}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parakeet.CstGenerator", "Parakeet.CstGenerator\Ara3D.Parakeet.CstGenerator.csproj", "{171ECB15-0092-41C8-BF8E-362E5300A7A6}"
 EndProject
 Global
@@ -35,6 +37,10 @@ Global
 		{FD574D56-9EA3-4AAA-92C9-F270D12B75C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD574D56-9EA3-4AAA-92C9-F270D12B75C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD574D56-9EA3-4AAA-92C9-F270D12B75C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA4E01AC-CD56-4467-9F7C-D912A79F8BDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA4E01AC-CD56-4467-9F7C-D912A79F8BDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA4E01AC-CD56-4467-9F7C-D912A79F8BDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA4E01AC-CD56-4467-9F7C-D912A79F8BDD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{171ECB15-0092-41C8-BF8E-362E5300A7A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{171ECB15-0092-41C8-BF8E-362E5300A7A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{171ECB15-0092-41C8-BF8E-362E5300A7A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
