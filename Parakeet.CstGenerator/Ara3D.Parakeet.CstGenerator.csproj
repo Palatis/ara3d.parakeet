@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <PackageReference Include="Ara3D.Parakeet" Version="*" />
+    <PackageReference Include="Ara3D.Parakeet.Grammars" Version="*" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Parakeet.Grammars\Ara3D.Parakeet.Grammars.csproj" />
+    <ProjectReference Include="..\Parakeet\Ara3D.Parakeet.csproj" />
+  </ItemGroup>
+
+</Project>
