@@ -26,14 +26,27 @@ namespace Ara3D.Parakeet
             return pi.GetValue(this) as Rule;
         }
 
-        public IEnumerable<Rule> GetRules()
+        public IEnumerable<KeyValuePair<string, Rule>> GetRulesByProperty()
             => GetType()
                 .GetProperties()
-                .OrderBy(p => p.Name)
                 .Where(pi => typeof(Rule).IsAssignableFrom(pi.PropertyType))
                 .Where(p => p.Name != "StartRule")
-                .Select(pi => pi.GetValue(this) as Rule)
-                .Where(r => r != null);
+                .Select(pi => new KeyValuePair<string, Rule>(pi.Name,  pi.GetValue(this) as Rule))
+                .Where(kvp => kvp.Value != null);
+
+        private IEnumerable<KeyValuePair<string, Rule>> GetRuelsByMethod()
+            => GetType()
+                .GetMethods()
+                .Where(m => typeof(Rule).IsAssignableFrom(m.ReturnType))
+                .Where(m => !m.GetParameters().Any())
+                .Select(m => new KeyValuePair<string, Rule>(m.Name, m.Invoke(this, Array.Empty<object>()) as Rule))
+                .Where(kvp => kvp.Value != null);
+
+        public IEnumerable<Rule> GetRules()
+            => GetRulesByProperty()
+                .Concat(GetRuelsByMethod())
+                .OrderBy(kvp => kvp.Key)
+                .Select(kvp => kvp.Value);
 
         public static Rule Choice(IEnumerable<Rule> rules)
             => new ChoiceRule(rules.ToArray());
