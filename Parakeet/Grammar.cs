@@ -41,9 +41,9 @@ namespace Ara3D.Parakeet
         public static Rule Sequence(IEnumerable<Rule> rules)
             => new SequenceRule(rules.ToArray());
 
-        public Rule Recursive(string inner)
+        public static Rule Recursive(string inner)
             => new RecursiveRule(() => GetRuleFromName(inner));
-        public Rule Recursive(Func<Rule> func)
+        public static Rule Recursive(Func<Rule> func)
             => new RecursiveRule(func);
 
         public Rule Named(Rule r, [CallerMemberName] string name = "")
@@ -57,7 +57,7 @@ namespace Ara3D.Parakeet
             return r;
         }
 
-        public Rule Strings(params string[] values)
+        public static Rule Strings(params string[] values)
             => new ChoiceRule(values.OrderByDescending(v => v.Length).Select(v => (Rule)v).ToArray());
 
         public Rule Node(Rule r, [CallerMemberName] string name = "")
@@ -73,31 +73,31 @@ namespace Ara3D.Parakeet
             return r;
         }
 
-        public OnFail OnFail(Rule r)
+        public static OnFail OnFail(Rule r)
             => new OnFail(r);       
 
-        public Rule CharSet(params char[] chars)
+        public static Rule CharSet(params char[] chars)
             => chars.Length == 1 ? (Rule)chars[0] : new CharSetRule(chars);
 
-        public Rule CharSet(string chars)
+        public static Rule CharSet(string chars)
             => CharSet(chars.ToCharArray());
 
-        public Rule ZeroOrMore(Rule r)
+        public static Rule ZeroOrMore(Rule r)
             => new ZeroOrMoreRule(r);
 
-        public Rule OneOrMore(Rule r) 
+        public static Rule OneOrMore(Rule r) 
             => new OneOrMoreRule(r);
         
-        public Rule Optional(Rule r) 
+        public static Rule Optional(Rule r) 
             => r.Optional();
         
-        public Rule Not(Rule r) 
+        public static Rule Not(Rule r) 
             => r.NotAt();
 
-        public Rule CaseInvariant(string s)
+        public static Rule CaseInvariant(string s)
             => new CaseInvariantStringRule(s);
 
-        public Rule CharRange(int from, int to)
+        public static Rule CharRange(int from, int to)
             => new CharRangeRule((char)from, (char)to);
     }
 
