@@ -51,6 +51,12 @@ namespace Ara3D.Parakeet
             return new SequenceRule(list.ToArray());
         }
 
+        public static SequenceRule operator +(Rule left, Func<Rule> right)
+            => left + right();
+
+        public static SequenceRule operator +(Func<Rule> left, Rule right)
+            => left() + right;
+
         public static ChoiceRule operator |(Rule left, Rule right)
         {
             var list = new List<Rule>();
@@ -64,6 +70,12 @@ namespace Ara3D.Parakeet
                 list.Add(right);
             return new ChoiceRule(list.ToArray());
         }
+
+        public static ChoiceRule operator |(Rule left, Func<Rule> right)
+            => left | right();
+
+        public static ChoiceRule operator |(Func<Rule> left, Rule right)
+            => left() | right;
 
         public static NotAtRule operator !(Rule rule) 
             => new NotAtRule(rule);
