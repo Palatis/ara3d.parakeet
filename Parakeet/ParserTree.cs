@@ -8,7 +8,8 @@ namespace Ara3D.Parakeet
     public class ParserTreeNode : ILocation
     {
         public readonly ParserNode Node;
-        public string Type => Node.Name;
+        public string Type => Node.NodeName;
+        public string Name => Node.NamedName;
         public IReadOnlyList<ParserTreeNode> Children { get; }
         public ParserTreeNode(ParserNode node, IReadOnlyList<ParserTreeNode> children)
             => (Node, Children) = (node, children);

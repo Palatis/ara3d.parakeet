@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+using System;
+using System.Runtime.CompilerServices;
 using Ara3D.Utils;
 
 namespace Ara3D.Parakeet
@@ -109,8 +110,12 @@ namespace Ara3D.Parakeet
         public bool Equals(ParserState state)
             => (state != null) && Position == state.Position;
         
-        public ParserState AddNode(string name, ParserState prev)
-            => new ParserState(Input, Position, new ParserNode(name, ParserRange.Create(prev, this), Node), LastError);
+        [Obsolete("use `AddNode(string,string,ParserState)` instead")]
+        public ParserState AddNode(string type, ParserState prev)
+            => new ParserState(Input, Position, new ParserNode(type, null, ParserRange.Create(prev, this), Node), LastError);
+
+        public ParserState AddNode(string type, string name, ParserState prev)
+            => new ParserState(Input, Position, new ParserNode(type, name, ParserRange.Create(prev, this), Node), LastError);
 
         public override int GetHashCode()
             => Position.GetHashCode();

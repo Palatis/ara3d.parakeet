@@ -17,7 +17,7 @@
             Previous = previous;
         }
 
-        public string NodeName => Node?.Name ?? "_INPUT_";
+        public string NodeName => Node?.NodeName ?? "_INPUT_";
         public ParserNode Node => SeqState.Node;
         public ParserInput Input => SeqState.Input;
         public ParserRange Range => ParserRange.Create(SeqState, State);

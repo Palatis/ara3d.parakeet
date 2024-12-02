@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 
 namespace Ara3D.Parakeet
 {
@@ -14,7 +15,10 @@ namespace Ara3D.Parakeet
         public int Start => Range.BeginPosition;
         public int End => Range.EndPosition;
         public int Length => Range.Length;
+        [Obsolete("Use `NodeName` or `NamedName`")]
         public readonly string Name;
+        public readonly string NodeName;
+        public readonly string NamedName;
         public readonly ParserNode Previous;
         public string Contents => Range.Text;
         public bool IsBegin => Range.Begin == null;
@@ -24,7 +28,7 @@ namespace Ara3D.Parakeet
             => Range;
 
         public override string ToString()
-            => $"({Name}:{Start}-{End}:{EllidedContents} end:{IsEnd})";
+            => $"({NodeName}:{Start}-{End}:{EllidedContents} end:{IsEnd})";
 
         public const int MaxLength = 20;
 
@@ -32,8 +36,8 @@ namespace Ara3D.Parakeet
             => Contents.Length < MaxLength            
             ? Contents : $"{Contents.Substring(0, MaxLength - 1)}...";
 
-        public ParserNode(string name, ParserRange range, ParserNode previous = null)
-            => (Name, Range, Previous) = (name, range, previous);
+        public ParserNode(string type, string name, ParserRange range, ParserNode previous = null)
+            => (Name, NodeName, NamedName, Range, Previous) = (type, type, name, range, previous);
 
         public ParserTreeNode ToParseTree()
             => ToParseTreeAndNode().Item1;
