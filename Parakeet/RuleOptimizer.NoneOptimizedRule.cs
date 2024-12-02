@@ -13,7 +13,7 @@ namespace Ara3D.Parakeet
             public NoneOptimizedRule(Rule rule)
                 => Rule = rule;
 
-            protected override ParserState MatchImplementation(ParserState state)
+            protected override ParserState MatchImplementation(string _, ParserState state)
                 => throw new NotImplementedException();
 
             public override bool Equals(object obj)

@@ -20,21 +20,21 @@ namespace Ara3D.Parakeet
         /// The ParserState may or may not be different from the previous one.
         /// A ParserState is immutable: it never changes. 
         /// </summary>
-        protected abstract ParserState MatchImplementation(ParserState state);
+        protected abstract ParserState MatchImplementation(string name, ParserState state);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ParserState Match(ParserState state)
+        public ParserState Match(string name, ParserState state)
         {
             // Trace the parsing during debug builds.
             if (state.Input.Debugging && Debugger.IsAttached && this.HasName())
             {
                 Debug.WriteLine($"Starting parse - {this.GetName()} {state}");
-                var r = MatchImplementation(state);
+                var r = MatchImplementation(name, state);
                 var result = r?.ToString() ?? "FAILED";
                 Debug.WriteLine($"Finished parse - {this.GetName()} {state} - {result}");
                 return r;
             }
-            return MatchImplementation(state);
+            return MatchImplementation(name, state);
         }
 
         public static SequenceRule operator +(Rule left, Rule right)
@@ -132,8 +132,8 @@ namespace Ara3D.Parakeet
         public NamedRule(Rule r, string name) 
             => (Rule, Name) = (r, name);
         
-        protected override ParserState MatchImplementation(ParserState state) 
-            => Rule.Match(state);
+        protected override ParserState MatchImplementation(string name, ParserState state)
+            => Rule.Match(Name, state);
         
         public override bool Equals(object obj) 
             => obj is NamedRule other && other.Rule.Equals(Rule) && Name == other.Name;
@@ -171,8 +171,8 @@ namespace Ara3D.Parakeet
         public RecursiveRule(Func<Rule> ruleFunc) 
             => RuleFunc = ruleFunc;
         
-        protected override ParserState MatchImplementation(ParserState state)
-            => Rule.Match(state);
+        protected override ParserState MatchImplementation(string name, ParserState state)
+            => Rule.Match(name, state);
         
         public override bool Equals(object obj) 
             => obj is RecursiveRule other && other.RuleFunc == RuleFunc;
@@ -196,7 +196,7 @@ namespace Ara3D.Parakeet
             Pattern = s;
         }
 
-        protected override ParserState MatchImplementation(ParserState state)
+        protected override ParserState MatchImplementation(string _, ParserState state)
             => state.Match(Pattern);
         
         public override bool Equals(object obj) 
@@ -221,7 +221,7 @@ namespace Ara3D.Parakeet
             Pattern = s;
         }
 
-        protected override ParserState MatchImplementation(ParserState state)
+        protected override ParserState MatchImplementation(string _, ParserState state)
             => state.MatchInvariant(Pattern);
 
         public override bool Equals(object obj)
@@ -236,7 +236,7 @@ namespace Ara3D.Parakeet
     /// </summary>
     public class AnyCharRule : Rule
     {
-        protected override ParserState MatchImplementation(ParserState state)
+        protected override ParserState MatchImplementation(string _, ParserState state)
             => state.AdvanceIfNotAtEnd();
         
         public static AnyCharRule Default { get; } 
@@ -261,7 +261,7 @@ namespace Ara3D.Parakeet
         public CharRangeRule(char from, char to)
             => (From, To) = (from, to);
 
-        protected override ParserState MatchImplementation(ParserState state)
+        protected override ParserState MatchImplementation(string _, ParserState state)
             => state.AdvanceIfWithin(From, To);
 
         public override bool Equals(object obj)
@@ -300,7 +300,7 @@ namespace Ara3D.Parakeet
         public CharSetRule(bool[] chars) 
             => Chars = chars;
 
-        protected override ParserState MatchImplementation(ParserState state)
+        protected override ParserState MatchImplementation(string _, ParserState state)
             => state.AtEnd() ? null 
                 : state.GetCurrent() < 128 && Chars[state.GetCurrent()] 
                     ? state.Advance() 
@@ -381,7 +381,7 @@ namespace Ara3D.Parakeet
         public CharRule(char ch) 
             => Char = ch;
 
-        protected override ParserState MatchImplementation(ParserState state)
+        protected override ParserState MatchImplementation(string _, ParserState state)
             => state.AdvanceIf(Char);
         
         public override bool Equals(object obj) 
@@ -397,7 +397,7 @@ namespace Ara3D.Parakeet
     /// </summary>
     public class EndOfInputRule : Rule
     {
-        protected override ParserState MatchImplementation(ParserState state) 
+        protected override ParserState MatchImplementation(string _, ParserState state)
             => state.AtEnd() ? state : null;
 
         public static EndOfInputRule Default 
@@ -421,8 +421,8 @@ namespace Ara3D.Parakeet
             : base(rule, name)
         { }
 
-        protected override ParserState MatchImplementation(ParserState state)
-            => Rule.Match(state.AddNode(Name, null))?.AddNode(Name, state);
+        protected override ParserState MatchImplementation(string name, ParserState state)
+            => Rule.Match(Name, state.AddNode(Name, name, null))?.AddNode(Name, name, state);
 
         public override bool Equals(object obj) 
             => obj is NodeRule nr && Name == nr.Name && Rule.Equals(nr.Rule);
@@ -441,14 +441,14 @@ namespace Ara3D.Parakeet
         public readonly Rule Rule;
         public ZeroOrMoreRule(Rule rule) => Rule = rule;
 
-        protected override ParserState MatchImplementation(ParserState state)
+        protected override ParserState MatchImplementation(string name, ParserState state)
         {
             var curr = state;
-            var next = Rule.Match(curr);
+            var next = Rule.Match(name, curr);
             while (next != null)
             {
                 curr = next;
-                next = Rule.Match(curr);
+                next = Rule.Match(name, curr);
                 if (next != null && next.Position <= curr.Position)
                 {
                     throw new ParserException(curr, "Parser is no longer making progress");
@@ -475,10 +475,10 @@ namespace Ara3D.Parakeet
         public readonly Rule Rule;
         public OneOrMoreRule(Rule rule) => Rule = rule;
 
-        protected override ParserState MatchImplementation(ParserState state)
+        protected override ParserState MatchImplementation(string name, ParserState state)
         {
             var curr = state;
-            var next = Rule.Match(curr);
+            var next = Rule.Match(name, curr);
             if (next == null)
             {
                 return null;
@@ -486,7 +486,7 @@ namespace Ara3D.Parakeet
             while (next != null)
             {
                 curr = next;
-                next = Rule.Match(curr);
+                next = Rule.Match(name, curr);
                 if (next != null && next.Position <= curr.Position)
                 {
                     throw new ParserException(curr, "Parser is no longer making progress");
@@ -518,14 +518,14 @@ namespace Ara3D.Parakeet
         public CountedRule(Rule rule, int min, int max) 
             => (Rule, Min, Max) = (rule, min, max);
 
-        protected override ParserState MatchImplementation(ParserState state)
+        protected override ParserState MatchImplementation(string name, ParserState state)
         {
             var curr = state;
 
             var i = 0;
             while (i++ < Min)
             {
-                var next = Rule.Match(curr);
+                var next = Rule.Match(name, curr);
                 if (next == null)
                     return null;
                 curr = next;
@@ -533,7 +533,7 @@ namespace Ara3D.Parakeet
 
             while (curr != null && i++ < Max)
             {
-                var next = Rule.Match(curr);
+                var next = Rule.Match(name, curr);
                 if (next == null)
                     return curr;
                 if (next.Position <= curr.Position)
@@ -568,8 +568,8 @@ namespace Ara3D.Parakeet
         public OptionalRule(Rule rule) 
             => Rule = rule;
 
-        protected override ParserState MatchImplementation(ParserState state)
-            => Rule.Match(state) ?? state;
+        protected override ParserState MatchImplementation(string name, ParserState state)
+            => Rule.Match(name, state) ?? state;
 
         public override bool Equals(object obj) 
             => obj is OptionalRule opt && opt.Rule.Equals(Rule);
@@ -603,7 +603,7 @@ namespace Ara3D.Parakeet
         public Rule this[int index] 
             => Rules[index];
         
-        protected override ParserState MatchImplementation(ParserState state)
+        protected override ParserState MatchImplementation(string name, ParserState state)
         {
             var newState = state;
             OnFail onFail = null;
@@ -616,7 +616,7 @@ namespace Ara3D.Parakeet
                 else
                 {
                     var prevState = newState;
-                    newState = rule.Match(prevState);
+                    newState = rule.Match(name, prevState);
                     if (newState == null)
                     {
                         if (onFail != null)
@@ -624,7 +624,7 @@ namespace Ara3D.Parakeet
                             var error = new ParserError(this, state, rule, prevState, prevState.LastError);
                             prevState = prevState.WithError(error);
                             var recovery = onFail.RecoveryRule;
-                            var result = recovery.Match(prevState);
+                            var result = recovery.Match(name, prevState);
                             return result;
                         }
                         return null;
@@ -663,11 +663,11 @@ namespace Ara3D.Parakeet
         public Rule this[int index] 
             => Rules[index];
 
-        protected override ParserState MatchImplementation(ParserState state)
+        protected override ParserState MatchImplementation(string name, ParserState state)
         {
             foreach (var rule in Rules)
             {
-                var newState = rule.Match(state);
+                var newState = rule.Match(name, state);
                 if (newState != null) return newState;
             }
 
@@ -695,8 +695,8 @@ namespace Ara3D.Parakeet
         public AtRule(Rule rule) 
             => Rule = rule;
         
-        protected override ParserState MatchImplementation(ParserState state)
-            => Rule.Match(state) != null ? state : null;
+        protected override ParserState MatchImplementation(string name, ParserState state)
+            => Rule.Match(name, state) != null ? state : null;
 
         public override bool Equals(object obj) 
             => obj is AtRule at && Rule.Equals(at.Rule);
@@ -719,8 +719,8 @@ namespace Ara3D.Parakeet
         public NotAtRule(Rule rule) 
             => (Rule) = (rule);
         
-        protected override ParserState MatchImplementation(ParserState state)
-            => Rule.Match(state) == null ? state : null;
+        protected override ParserState MatchImplementation(string name, ParserState state)
+            => Rule.Match(name, state) == null ? state : null;
 
         public override bool Equals(object obj) 
             => obj is NotAtRule notAt && Rule.Equals(notAt.Rule);
@@ -745,7 +745,7 @@ namespace Ara3D.Parakeet
         public OnFail(Rule rule) 
             => RecoveryRule = rule;
         
-        protected override ParserState MatchImplementation(ParserState state) 
+        protected override ParserState MatchImplementation(string _, ParserState state)
             => state;
         
         public override bool Equals(object obj) 
@@ -769,7 +769,7 @@ namespace Ara3D.Parakeet
         public BooleanRule(bool b)
             => Value = b;
 
-        protected override ParserState MatchImplementation(ParserState state)
+        protected override ParserState MatchImplementation(string _, ParserState state)
             => Value ? state : null;
 
         public override bool Equals(object obj)

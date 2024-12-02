@@ -7,7 +7,7 @@ namespace Ara3D.Parakeet
     public static class ParserExtensions
     {
         public static ParserState Parse(this Rule r, ParserInput input)
-            => r.Match(new ParserState(input));
+            => r.Match(null, new ParserState(input));
 
         public static IEnumerable<ParserRange> GetMatches(this string input, Rule rule)
             => GetMatches((ParserInput)input, rule);
@@ -21,7 +21,7 @@ namespace Ara3D.Parakeet
                 p = p.ClearNodes();
 
                 // Test to see if we can generate a result
-                var result = rule.Match(p);
+                var result = rule.Match(null, p);
                 if (result != null)
                 {
                     yield return ParserRange.Create(p, result);
@@ -39,7 +39,7 @@ namespace Ara3D.Parakeet
         }
 
         public static IEnumerable<IGrouping<string, ParserNode>> GroupNodes(this IEnumerable<ParserNode> nodes)
-            => nodes.GroupBy(n => n.Name).OrderBy(g => g.Key);
+            => nodes.GroupBy(n => n.NodeName).OrderBy(g => g.Key);
 
         public static StringBuilder BuildXmlString(this ParserTreeNode treeNode, string indent = "", StringBuilder sb = null)
         {
