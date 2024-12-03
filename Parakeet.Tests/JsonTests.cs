@@ -190,6 +190,7 @@ namespace Ara3D.Parakeet.Tests
                 var sw = Stopwatch.StartNew();
                 JObject.Parse(text);
                 Console.WriteLine($"It took {sw.Elapsed} to parse using Newtonsoft");
+                Console.WriteLine();
             }
 
             {
@@ -199,8 +200,34 @@ namespace Ara3D.Parakeet.Tests
 
                 var tree = ps.Node.ToParseTree();
                 Console.WriteLine($"Inner tree nodes = {CountInnerNodes(tree)}");
+                Console.WriteLine();
                 Assert.NotNull(ps);
                 Assert.IsTrue(ps.AtEnd());
+            }
+
+            {
+                var sw = Stopwatch.StartNew();
+                var rule = Grammar.Json.Optimize();
+                Console.WriteLine($"It took {sw.Elapsed} to optimize the rules");
+
+                sw.Restart();
+                var ps = rule.Parse(text);
+                Console.WriteLine($"It took {sw.Elapsed} to parse optimized using Parakeet");
+
+                var tree = ps.Node.ToParseTree();
+                Console.WriteLine($"Inner tree nodes = {CountInnerNodes(tree)}");
+                Console.WriteLine();
+                Assert.NotNull(ps);
+                Assert.IsTrue(ps.AtEnd());
+            }
+
+            {
+                var rule = Grammar.Json;
+                var ro = new RuleOptimizer();
+                var opt = ro.Optimize(rule);
+                Console.WriteLine($"Rule          : {rule.ToString().Replace("\r", "\\r").Replace("\n", "\\n")}");
+                Console.WriteLine($"Optimized Rule: {opt.ToString().Replace("\r", "\\r").Replace("\n", "\\n")}");
+                Console.WriteLine($"Total optimized rules: {ro.OptimizedRules.Count}");
             }
         }
     }
