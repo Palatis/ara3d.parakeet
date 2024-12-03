@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -6,7 +5,7 @@ using System.Linq;
 
 namespace Ara3D.Parakeet
 {
-    public class RuleOptimizer
+    public partial class RuleOptimizer
     {
         public Dictionary<Rule, Rule> OptimizedRules = new Dictionary<Rule, Rule>();
 
@@ -203,10 +202,26 @@ namespace Ara3D.Parakeet
 
         public Rule Optimize(Rule r)
         {
+            if (r is OptimizedRecursiveRule)
+                return r;
             if (OptimizedRules.ContainsKey(r))
                 return OptimizedRules[r];
+
+            OptimizedRules[r] = new NoneOptimizedRule(r);
             var opt = OptimizeImplementation(r);
-            return OptimizedRules[r] = opt;
+            OptimizedRules[r] = opt;
+
+            var unoptimized = OptimizedRules.Where(kv => kv.Value is NoneOptimizedRule).Select(kv => kv.Key).ToArray();
+            foreach (var uopt in unoptimized)
+                OptimizedRules.Remove(uopt);
+
+            opt = OptimizeImplementation(r);
+            OptimizedRules[r] = opt;
+
+            if (opt is OptimizedRecursiveRule orr)
+                _ = orr.Rule; // access the Rule to generate the cached rules
+
+            return opt;
         }
 
         private Rule OptimizeImplementation(Rule r)
@@ -214,7 +229,7 @@ namespace Ara3D.Parakeet
             switch (r)
             {
                 case RecursiveRule rr:
-                    return rr;
+                    return new OptimizedRecursiveRule(() => Optimize(rr.Rule));
 
                 case NodeRule nodeRule:
                     return new NodeRule(Optimize(nodeRule.Rule), nodeRule.Name);
