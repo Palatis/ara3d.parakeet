@@ -111,7 +111,8 @@ namespace Ara3D.Parakeet
         public override int GetHashCode()
             => throw new NotImplementedException();
 
-        public virtual IReadOnlyList<Rule> Children 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public virtual IReadOnlyList<Rule> Children
             => Array.Empty<Rule>();
 
         public override string ToString()
@@ -140,6 +141,7 @@ namespace Ara3D.Parakeet
         public override int GetHashCode() 
             => Hash(Rule, Name);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => new[] { Rule };
     }
 
@@ -461,6 +463,7 @@ namespace Ara3D.Parakeet
         public override int GetHashCode() 
             => Hash (Rule);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => new[] { Rule };
     }
 
@@ -548,6 +551,7 @@ namespace Ara3D.Parakeet
         public override int GetHashCode() 
             => Hash(Rule);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children 
             => new[] { Rule };
 
@@ -573,6 +577,7 @@ namespace Ara3D.Parakeet
         public override int GetHashCode() 
             => Hash(Rule);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => new[] { Rule };
     }
 
@@ -582,6 +587,7 @@ namespace Ara3D.Parakeet
     /// </summary>
     public class SequenceRule : Rule
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         public readonly Rule[] Rules;
 
         public SequenceRule(params Rule[] rules)
@@ -635,6 +641,7 @@ namespace Ara3D.Parakeet
         public override int GetHashCode() 
             => Hash(Rules);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => Rules;
     }
 
@@ -644,6 +651,7 @@ namespace Ara3D.Parakeet
     /// </summary>
     public class ChoiceRule : Rule
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         public readonly Rule[] Rules;
         
         public ChoiceRule(params Rule[] rules) 
@@ -672,6 +680,7 @@ namespace Ara3D.Parakeet
         public override int GetHashCode() 
             => Hash(Rules);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => Rules;
     }
 
@@ -695,6 +704,7 @@ namespace Ara3D.Parakeet
         public override int GetHashCode() 
             => Hash(Rule);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => new[] { Rule };
     }
 
@@ -718,6 +728,7 @@ namespace Ara3D.Parakeet
         public override int GetHashCode() 
             => Hash(Rule);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => new[] { Rule };
     }
 
