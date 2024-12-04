@@ -222,6 +222,9 @@ namespace Ara3D.Parakeet
                 case NamedRule namedRule:
                     return Optimize(namedRule.Rule);
 
+                case OnFail onFail:
+                    return new OnFail(Optimize(onFail.RecoveryRule));
+
                 case StringRule stringRule:
                     if (stringRule.Pattern.Length == 1)
                         return new CharRule(stringRule.Pattern[0]);
