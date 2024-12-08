@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace Ara3D.Parakeet.Grammars
@@ -11,7 +11,7 @@ namespace Ara3D.Parakeet.Grammars
         public override Rule StartRule => Document;
         public static readonly XmlGrammar Instance = new XmlGrammar();
 
-        public static CharRangeRule CharClass(string s)
+        public static CharSetRule CharClass(string s)
         {
             s = s.Trim();
             if (!s.StartsWith("[") || !s.EndsWith("]"))
@@ -29,7 +29,7 @@ namespace Ara3D.Parakeet.Grammars
             var b = Convert.ToInt32($"0{to.Substring(1)}", 16);
             if (a > short.MaxValue || b > short.MaxValue)
                 return null;
-            return new CharRangeRule((char)a, (char)b);
+            return new CharSetRule((char)a, (char)b);
         }
 
         public static Rule CharClasses(string s)

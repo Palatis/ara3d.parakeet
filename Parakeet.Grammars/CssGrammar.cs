@@ -1,4 +1,4 @@
-﻿
+
 namespace Ara3D.Parakeet.Grammars
 {
     /// <summary>
@@ -17,7 +17,7 @@ namespace Ara3D.Parakeet.Grammars
 
         // Token rules 
         public Rule H => Named(HexDigit);
-        public Rule NonAscii => Named(new CharRangeRule((char)240, (char)377));
+        public Rule NonAscii => Named(CharRange((char)240, (char)377));
         public Rule Unicode => Named('\\' + H.Counted(1, 6) + ("\r\n" | Space).Optional());
         public Rule Escape => Named(Unicode | '\\' + Not("\r\n\f".ToCharSetRule() | HexDigit));
         public Rule Nmstart => Named(IdentifierFirstChar | NonAscii | Escape);
