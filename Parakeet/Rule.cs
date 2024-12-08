@@ -84,7 +84,7 @@ namespace Ara3D.Parakeet
             => new CharRule((char)n);
 
         public static implicit operator Rule(bool b)
-            => new BooleanRule(b);
+            => b ? BooleanRule.True : BooleanRule.False;
 
         public static implicit operator Rule(char[] cs) 
             => cs.Length == 1 ? (Rule)cs[0] : new CharSetRule(cs);
@@ -316,6 +316,8 @@ namespace Ara3D.Parakeet
         public static AnyCharRule Default { get; } 
             = new AnyCharRule();
         
+        private AnyCharRule() { }
+
         public override bool Equals(object obj) 
             => obj is AnyCharRule;
         
@@ -484,6 +486,8 @@ namespace Ara3D.Parakeet
 
         public static EndOfInputRule Default 
             => new EndOfInputRule();
+        
+        private EndOfInputRule() { }
         
         public override bool Equals(object obj) 
             => obj is EndOfInputRule;
@@ -845,7 +849,7 @@ namespace Ara3D.Parakeet
 
         public readonly bool Value;
 
-        public BooleanRule(bool b)
+        private BooleanRule(bool b)
             => Value = b;
 
         protected override ParserState MatchImplementation(ParserState state)
