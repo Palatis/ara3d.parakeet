@@ -1,4 +1,6 @@
 #pragma warning disable NUnit2005
+using System.Diagnostics;
+
 namespace Ara3D.Parakeet.Tests
 {
     public static class ParserTests
@@ -49,7 +51,9 @@ namespace Ara3D.Parakeet.Tests
             ParserState ps = null;
             try
             {
+                var sw = Stopwatch.StartNew();
                 ps = rule.Parse(input);
+                Console.WriteLine($"Input parsed with original rule in {sw.Elapsed}");
             }
             catch (ParserException pe)
             {
@@ -80,8 +84,12 @@ namespace Ara3D.Parakeet.Tests
             }
 
             // Check that optimized rules produce the same output 
+            var sw2 = Stopwatch.StartNew();
             var optimizedRule = rule.Optimize();
+            Console.WriteLine($"Rule optimized in {sw2.Elapsed}");
+            sw2.Restart();
             var ps2 = optimizedRule.Parse(input);
+            Console.WriteLine($"Input parsed with optimized rule in {sw2.Elapsed}");
 
             Assert.IsTrue(ps == null ? ps2 == null : ps2 != null);
 
