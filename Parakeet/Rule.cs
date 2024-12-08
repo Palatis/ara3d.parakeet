@@ -357,7 +357,6 @@ namespace Ara3D.Parakeet
 
     /// <summary>
     /// Matches a character if matches one of a set of ASCII characters.
-    /// Each character must be in the range of 0 to 128 (valid ASCII character set).
     /// Uses a table lookup for performance.
     /// Advances the parser if successful. 
     /// </summary>
@@ -365,10 +364,10 @@ namespace Ara3D.Parakeet
     {
         public static bool[] CharsToTable(IEnumerable<char> chars)
         {
-            var r = new bool[128];
+            var max = chars.Max();
+            var r = new bool[max + 1];
             foreach (var c in chars)
             {
-                if (c >= 128) throw new NotSupportedException();
                 r[c] = true;
             }
 
@@ -385,10 +384,9 @@ namespace Ara3D.Parakeet
             => Chars = chars;
 
         protected override ParserState MatchImplementation(ParserState state)
-            => state.AtEnd() ? null
-                : state.GetCurrent() < 128 && Chars[state.GetCurrent()]
-                    ? state.Advance()
-                    : null;
+            => !state.AtEnd() && state.GetCurrent() < Chars.Length && Chars[state.GetCurrent()]
+                ? state.Advance()
+                : null;
 
         public override bool Equals(object obj)
             => obj is CharSetRule csr && Chars.SequenceEqual(csr.Chars);
@@ -398,19 +396,23 @@ namespace Ara3D.Parakeet
 
         public CharSetRule Union(CharSetRule other)
         {
-            var tmp = Chars.ToArray();
-            for (var i = 0; i < tmp.Length; i++)
+            var (longer, shorter) = Chars.Length > other.Chars.Length
+                ? (Chars.ToArray(), other.Chars)
+                : (other.Chars.ToArray(), Chars);
+
+            for (var i = 0; i < shorter.Length; ++i)
             {
-                if (other.Chars[i])
-                    tmp[i] = true;
+                if (shorter[i])
+                    longer[i] = true;
             }
 
-            return new CharSetRule(tmp);
+            return new CharSetRule(longer);
         }
 
         public CharSetRule Append(char other)
         {
-            var tmp = Chars.ToArray();
+            var tmp = new bool[Math.Max(Chars.Length, other + 1)];
+            Array.Copy(Chars, tmp, Chars.Length);
             tmp[other] = true;
             return new CharSetRule(tmp);
         }
