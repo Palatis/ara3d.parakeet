@@ -322,28 +322,6 @@ namespace Ara3D.Parakeet
     }
 
     /// <summary>
-    /// Matches a character if it is within a specific character range (inclusive).
-    /// Advances the parser if successful.
-    /// </summary>
-    public class CharRangeRule : Rule
-    {
-        public readonly char From;
-        public readonly char To;
-
-        public CharRangeRule(char from, char to)
-            => (From, To) = (from, to);
-
-        protected override ParserState MatchImplementation(ParserState state)
-            => state.AdvanceIfWithin(From, To);
-
-        public override bool Equals(object obj)
-            => obj is CharRangeRule crr && crr.From == From && crr.To == To;
-
-        protected override int GetHashCodeInternal()
-            => Hash(From, To);
-    }
-
-    /// <summary>
     /// Matches a character if matches one of a set of ASCII characters.
     /// Uses a table lookup for performance.
     /// Advances the parser if successful. 
@@ -362,7 +340,25 @@ namespace Ara3D.Parakeet
             return r;
         }
 
+        public static bool[] CharsFromRange(char from, char to)
+        {
+            if (from > to)
+                (from, to) = (to, from);
+
+            var r = new bool[to + 1];
+            for (int c = from; c < to; ++c)
+            {
+                r[c] = true;
+            }
+
+            return r;
+        }
+
         public readonly bool[] Chars;
+
+        public CharSetRule(char from, char to)
+            : this(CharsFromRange(from, to))
+        { }
 
         public CharSetRule(params char[] chars)
             : this(CharsToTable(chars))

@@ -98,7 +98,7 @@ namespace Ara3D.Parakeet
             => new CaseInvariantStringRule(s);
 
         public Rule CharRange(int from, int to)
-            => new CharRangeRule((char)from, (char)to);
+            => new CharSetRule((char)from, (char)to);
     }
 
 }
