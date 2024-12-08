@@ -283,7 +283,7 @@ namespace Ara3D.Parakeet
         {
             if (string.IsNullOrEmpty(s))
                 throw new ArgumentException("Pattern must be non-empty", nameof(s));
-            Pattern = s;
+            Pattern = s.ToLower();
         }
 
         protected override ParserState MatchImplementation(ParserState state)
@@ -292,7 +292,7 @@ namespace Ara3D.Parakeet
                 return null;
             for (int i = 0, j = state.Position; i < Pattern.Length; i++, j++)
             {
-                if (Pattern[i].ToLower() != state.Input[j].ToLower())
+                if (Pattern[i] != state.Input[j].ToLower())
                     return null;
             }
 
