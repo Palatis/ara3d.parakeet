@@ -287,7 +287,17 @@ namespace Ara3D.Parakeet
         }
 
         protected override ParserState MatchImplementation(ParserState state)
-            => state.MatchInvariant(Pattern);
+        {
+            if (state.CharsLeft < Pattern.Length)
+                return null;
+            for (int i = 0, j = state.Position; i < Pattern.Length; i++, j++)
+            {
+                if (Pattern[i].ToLower() != state.Input[j].ToLower())
+                    return null;
+            }
+
+            return state.Advance(Pattern.Length);
+        }
 
         public override bool Equals(object obj)
             => obj is CaseInvariantStringRule smr && smr.Pattern == Pattern;
