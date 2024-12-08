@@ -457,7 +457,9 @@ namespace Ara3D.Parakeet
             => Char = ch;
 
         protected override ParserState MatchImplementation(ParserState state)
-            => state.AdvanceIf(Char);
+            => !state.AtEnd() && state.GetCurrent() == Char
+                ? state.Advance()
+                : null;
         
         public override bool Equals(object obj) 
             => obj is CharRule csr && Char == csr.Char;
