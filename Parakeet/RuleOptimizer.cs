@@ -272,7 +272,11 @@ namespace Ara3D.Parakeet
                         return Log(r, null, new AtRule(notAt2.Rule), "!!A => &A");
 
                     if (inner is BooleanRule br)
-                        return Log(r, null, new BooleanRule(!br.Value), $"!{(br.Value ? "_TRUE_" : "_FALSE_")} => {(br.Value ? "_FALSE_" : "_TRUE_")}");
+                        return Log(
+                            r, null, 
+                            br.Value ? BooleanRule.False : BooleanRule.True,
+                            $"!{(br.Value ? "_TRUE_" : "_FALSE_")} => {(br.Value ? "_FALSE_" : "_TRUE_")}"
+                        );
 
                     return new NotAtRule(inner);
                 }
