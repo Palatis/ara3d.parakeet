@@ -312,7 +312,7 @@ namespace Ara3D.Parakeet
     public class AnyCharRule : Rule
     {
         protected override ParserState MatchImplementation(ParserState state)
-            => state.AdvanceIfNotAtEnd();
+            => state.AtEnd() ? null : state.Advance();
         
         public static AnyCharRule Default { get; } 
             = new AnyCharRule();
