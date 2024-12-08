@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using Ara3D.Utils;
 
 namespace Ara3D.Parakeet
@@ -35,10 +35,6 @@ namespace Ara3D.Parakeet
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public ParserState Advance()
             => new ParserState(Input, Position + 1, Node, LastError);
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ParserState AdvanceIf(char c)
-            => AtEnd() ? null : GetCurrent() == c ? Advance() : null;
 
         public ParserState JumpToEnd()
             => Advance(CharsLeft);
