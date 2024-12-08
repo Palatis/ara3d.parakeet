@@ -19,7 +19,7 @@ namespace Ara3D.Parakeet
             public override bool Equals(object obj)
                 => obj is NoneOptimizedRule opt && Rule == opt.Rule;
 
-            public override int GetHashCode() => Hash(Rule);
+            protected override int GetHashCodeInternal() => Hash(Rule);
         }
     }
 }
