@@ -44,10 +44,6 @@ namespace Ara3D.Parakeet
         public ParserState AdvanceIfWithin(char a, char b)
             => AtEnd() ? null : GetCurrent() >= a && GetCurrent() <= b ? Advance() : null;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public ParserState AdvanceIfNotAtEnd()
-            => AtEnd() ? null : Advance();
-
         public ParserState JumpToEnd()
             => Advance(CharsLeft);
 
