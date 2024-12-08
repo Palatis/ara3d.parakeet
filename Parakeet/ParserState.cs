@@ -75,20 +75,6 @@ namespace Ara3D.Parakeet
         public int CharsLeft
             => Input.Length - Position;
 
-        public ParserState MatchInvariant(string s)
-        {
-            var n = s.Length;
-            if (CharsLeft < n)
-                return null;
-            for (int i = 0, j = Position; i < n; i++, j++)
-            {
-                if (s[i].ToLower() != Input[j].ToLower())
-                    return null;
-            }
-
-            return Advance(n);
-        }
-
         public override bool Equals(object obj)
             => obj is ParserState ps && Equals(ps);
 
