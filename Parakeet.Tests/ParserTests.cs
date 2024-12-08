@@ -202,7 +202,7 @@ namespace Ara3D.Parakeet.Tests
             var b = new CharRule('b');
             var ab = new StringRule("ab");
             var ba = new StringRule("ba");
-            var any = new AnyCharRule();
+            var any = AnyCharRule.Default;
 
             return new (Rule, string[], string[])[]
             {
