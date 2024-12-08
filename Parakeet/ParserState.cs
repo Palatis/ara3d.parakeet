@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using Ara3D.Utils;
 
 namespace Ara3D.Parakeet
@@ -74,20 +74,6 @@ namespace Ara3D.Parakeet
 
         public int CharsLeft
             => Input.Length - Position;
-
-        public ParserState Match(string s)
-        {
-            var n = s.Length;
-            if (CharsLeft < n)
-                return null;
-            for (int i = 0, j = Position; i < n; i++, j++)
-            {
-                if (s[i] != Input[j])
-                    return null;
-            }
-
-            return Advance(n);
-        }
 
         public ParserState MatchInvariant(string s)
         {
