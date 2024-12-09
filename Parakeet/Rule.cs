@@ -236,6 +236,9 @@ namespace Ara3D.Parakeet
                 );
             }
         }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override IReadOnlyList<Rule> Children => new[] { Rule };
     }
 
     /// <summary>
