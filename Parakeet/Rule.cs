@@ -118,6 +118,7 @@ namespace Ara3D.Parakeet
         private readonly Lazy<int> LazyHashCode;
         public override sealed int GetHashCode() => LazyHashCode.Value;
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public virtual IReadOnlyList<Rule> Children
             => Array.Empty<Rule>();
 
@@ -147,6 +148,7 @@ namespace Ara3D.Parakeet
         protected override int GetHashCodeInternal()
             => Hash(typeof(NamedRule), Rule, Name);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => new[] { Rule };
     }
 
@@ -546,6 +548,7 @@ namespace Ara3D.Parakeet
         protected override int GetHashCodeInternal()
             => Hash(typeof(ZeroOrMoreRule), Rule);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => new[] { Rule };
     }
 
@@ -583,6 +586,7 @@ namespace Ara3D.Parakeet
         protected override int GetHashCodeInternal()
             => Hash(typeof(OneOrMoreRule), Rule);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => new[] { Rule };
     }
 
@@ -633,6 +637,7 @@ namespace Ara3D.Parakeet
         protected override int GetHashCodeInternal()
             => Hash(typeof(CountedRule), Min, Max, Rule);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children 
             => new[] { Rule };
 
@@ -658,6 +663,7 @@ namespace Ara3D.Parakeet
         protected override int GetHashCodeInternal()
             => Hash(typeof(OptionalRule), Rule);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => new[] { Rule };
     }
 
@@ -667,6 +673,7 @@ namespace Ara3D.Parakeet
     /// </summary>
     public class SequenceRule : Rule
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         public readonly Rule[] Rules;
 
         public SequenceRule(params Rule[] rules)
@@ -721,6 +728,7 @@ namespace Ara3D.Parakeet
         protected override int GetHashCodeInternal()
             => Hash(typeof(SequenceRule), Hash(Rules));
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => Rules;
     }
 
@@ -730,6 +738,7 @@ namespace Ara3D.Parakeet
     /// </summary>
     public class ChoiceRule : Rule
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
         public readonly Rule[] Rules;
         
         public ChoiceRule(params Rule[] rules) 
@@ -763,6 +772,7 @@ namespace Ara3D.Parakeet
         protected override int GetHashCodeInternal()
             => Hash(typeof(ChoiceRule), Hash(Rules));
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => Rules;
     }
 
@@ -786,6 +796,7 @@ namespace Ara3D.Parakeet
         protected override int GetHashCodeInternal()
             => Hash(typeof(AtRule), Rule);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => new[] { Rule };
     }
 
@@ -809,6 +820,7 @@ namespace Ara3D.Parakeet
         protected override int GetHashCodeInternal()
             => Hash(typeof(NotAtRule), Rule);
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         public override IReadOnlyList<Rule> Children => new[] { Rule };
     }
 
