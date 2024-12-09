@@ -70,6 +70,8 @@ namespace Ara3D.Parakeet
                     return rec.Rule.ToDefinition(shortForm, indent);
                 case StringRule sm:
                     return $"\"{sm.Pattern.EscapeChars()}\"";
+                case CaseInvariantStringRule cism:
+                    return $"\"{cism.Pattern.EscapeChars()}\"/i";
                 case AnyCharRule _:
                     return $"_ANY_";
                 case NotAtRule not:
