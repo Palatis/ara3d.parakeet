@@ -848,6 +848,9 @@ namespace Ara3D.Parakeet
         
         protected override int GetHashCodeInternal()
             => Hash(typeof(OnFail), RecoveryRule);
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        public override IReadOnlyList<Rule> Children => new[] { RecoveryRule };
     }
 
     /// <summary>
