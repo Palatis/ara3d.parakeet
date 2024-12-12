@@ -47,16 +47,10 @@ namespace Ara3D.Parakeet
         public static Rule To(this char c1, char c2)
             => new CharSetRule(Enumerable.Range(c1, c2 - c1 + 1).Select(i => (char)i).ToArray());
 
-        public static bool HasName(this Rule rule)
-            => rule is NamedRule;
-
-        public static string GetName(this Rule rule)
-            => rule is NamedRule nr ? nr.Name : "__";
-
         public static Rule Optimize(this Rule rule, TextWriter logger = null)
             => new RuleOptimizer(logger).Optimize(rule);
 
-        public static Rule RepeatUntilAt(this Rule repeat, Rule delimiter) 
+        public static Rule RepeatUntilAt(this Rule repeat, Rule delimiter)
             => repeat.Except(delimiter).ZeroOrMore();
         
         public static Rule RepeatUntilPast(this Rule repeat, Rule delimiter) 

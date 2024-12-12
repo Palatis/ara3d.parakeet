@@ -43,6 +43,9 @@ namespace Ara3D.Parakeet
             return MatchImplementation(state);
         }
 
+        public virtual bool HasName() => false;
+        public virtual string GetName() => "__";
+
         public static SequenceRule operator +(Rule left, Rule right)
         {
             var list = new List<Rule>();
@@ -142,6 +145,9 @@ namespace Ara3D.Parakeet
         protected override ParserState MatchImplementation(ParserState state)
             => Rule.Match(state);
         
+        public override bool HasName() => true;
+        public override string GetName() => Name;
+
         public override bool Equals(object obj) 
             => obj is NamedRule other && Equals(other.GetType(), typeof(NamedRule)) && other.Rule.Equals(Rule) && Name == other.Name;
         
