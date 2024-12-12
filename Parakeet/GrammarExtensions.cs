@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Ara3D.Parakeet
 {
@@ -70,7 +71,7 @@ namespace Ara3D.Parakeet
                 case AtRule at:
                     return $"&({at.Rule.ToDefinition(shortForm, indent)})";
                 case CharSetRule set:
-                    return $"[{set}]";
+                    return $"[{set.ToDefinition()}]";
                 case CharRangeRule range:
                     return $"[{range.From}-{range.To}]";
                 case OnFail set:
@@ -83,6 +84,67 @@ namespace Ara3D.Parakeet
                     return br.Value ? "_TRUE_" : "_FALSE_";
                 default:
                     return "_UNKNOWN_";
+            }
+        }
+
+        public static string ToDefinition(this CharSetRule r)
+        {
+            var sb = new StringBuilder();
+            var start = 0;
+            while (start < r.Chars.Length)
+            {
+                if (r.Chars[start])
+                {
+                    var end = start;
+                    while (end < r.Chars.Length && r.Chars[end])
+                        ++end;
+
+                    var cStart = EscapeCharSetRuleChar((char)start);
+                    var cEnd = EscapeCharSetRuleChar((char)(end - 1));
+
+                    switch (end - start)
+                    {
+                        case 1:
+                            sb.Append(cStart);
+                            break;
+                        case 2:
+                            sb.Append(cStart);
+                            sb.Append(cEnd);
+                            break;
+                        default:
+                            sb.Append(cStart);
+                            sb.Append('-');
+                            sb.Append(cEnd);
+                            break;
+                    }
+
+                    start = end;
+                    continue;
+                }
+                ++start;
+            }
+            return sb.ToString();
+        }
+
+        private static string EscapeCharSetRuleChar(char c)
+        {
+            switch (c)
+            {
+                case '\0': return @"\0"; // Null
+                case '\\': return @"\\"; // Slash
+                case '\a': return @"\a"; // Alert
+                case '\b': return @"\b"; // Backspace
+                case '\f': return @"\f"; // Form feed
+                case '\n': return @"\n"; // Line feed
+                case '\r': return @"\r"; // Carriage return
+                case '\t': return @"\t"; // Horizontal tab
+                case '\v': return @"\v"; // Vertical tab
+                case '\'': return @"\'"; // Single Quote
+                case '-': return @"\-";  // Hyphen
+                case '[': return @"\[";  // Open bracket
+                case ']': return @"\]";  // Close bracket
+                default:
+                    return char.IsControl(c) ? $"\\u{(int)c:X4}" : c.ToString();
             }
         }
 

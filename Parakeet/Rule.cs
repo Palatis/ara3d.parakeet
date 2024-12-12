@@ -425,44 +425,6 @@ namespace Ara3D.Parakeet
             tmp[other] = true;
             return new CharSetRule(tmp);
         }
-
-        public override string ToString()
-        {
-            var rangeCount = 0;
-            var sb = new StringBuilder();
-
-            for (var i = 0; i < Chars.Length; ++i)
-            {
-                var c = (char)i;
-                if (Chars[i])
-                {
-                    rangeCount++;
-                    if (rangeCount == 1)
-                    {
-                        sb.Append(c.EscapeChar());
-                    }
-                }
-                else
-                {
-                    if (i > 0)
-                    {
-                        var prevChar = (char)(i - 1);
-                        if (rangeCount > 2)
-                        {
-                            sb.Append("-");
-                        }
-
-                        if (rangeCount > 1)
-                        {
-                            sb.Append(prevChar.EscapeChar());
-                        }
-                    }
-
-                    rangeCount = 0;
-                }
-            }
-            return sb.ToString();
-        }
     }
 
     /// <summary>
