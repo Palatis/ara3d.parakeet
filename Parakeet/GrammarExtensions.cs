@@ -6,15 +6,6 @@ namespace Ara3D.Parakeet
 {
     public static class GrammarExtensions
     {
-        public static Rule Body(this Rule rule)
-        {
-            if (rule is NamedRule tr)
-                return tr.Rule.Body();
-            if (rule is RecursiveRule rr)
-                return rr.Rule.Body();
-            return rule;
-        }
-
         public static void OutputDefinitions(this IGrammar grammar, bool shortForm)
         {
             foreach (var r in grammar.GetRules())

@@ -43,6 +43,8 @@ namespace Ara3D.Parakeet
             return MatchImplementation(state);
         }
 
+        public virtual Rule Body() => this;
+
         public virtual bool HasName() => false;
         public virtual string GetName() => "__";
 
@@ -145,6 +147,7 @@ namespace Ara3D.Parakeet
         protected override ParserState MatchImplementation(ParserState state)
             => Rule.Match(state);
         
+        public override Rule Body() => Rule;
         public override bool HasName() => true;
         public override string GetName() => Name;
 
@@ -187,7 +190,9 @@ namespace Ara3D.Parakeet
         protected override ParserState MatchImplementation(ParserState state)
             => Rule.Match(state);
         
-        public override bool Equals(object obj) 
+        public override Rule Body() => Rule;
+
+        public override bool Equals(object obj)
         {
             if (!(obj is RecursiveRule other))
                 return false;
