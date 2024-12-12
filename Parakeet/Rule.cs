@@ -339,7 +339,9 @@ namespace Ara3D.Parakeet
             => (From, To) = (from, to);
 
         protected override ParserState MatchImplementation(ParserState state)
-            => state.AdvanceIfWithin(From, To);
+            => !state.AtEnd() && From <= state.GetCurrent() && state.GetCurrent() <= To
+                ? state.Advance()
+                : null;
 
         public override bool Equals(object obj)
             => obj is CharRangeRule crr && crr.From == From && crr.To == To;
