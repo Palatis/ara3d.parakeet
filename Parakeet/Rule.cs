@@ -373,22 +373,20 @@ namespace Ara3D.Parakeet
     /// </summary>
     public class CharSetRule : Rule
     {
-        public static bool[] CharsToTable(IEnumerable<char> chars)
-        {
-            var max = chars.Max();
-            var r = new bool[max + 1];
-            foreach (var c in chars)
-            {
-                r[c] = true;
-            }
-
-            return r;
-        }
-
         public readonly bool[] Chars;
 
+        public CharSetRule(IEnumerable<char> chars)
+        {
+            var max = chars.Max();
+            Chars = new bool[max + 1];
+            foreach (var c in chars)
+            {
+                Chars[c] = true;
+            }
+        }
+        
         public CharSetRule(params char[] chars)
-            : this(CharsToTable(chars))
+            : this(chars.AsEnumerable())
         { }
 
         public CharSetRule(bool[] chars)
